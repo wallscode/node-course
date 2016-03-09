@@ -1,11 +1,11 @@
-console.log('starting password manager');
+console.log('Starting password manager');
 
 var crypto = require('crypto-js');
 var storage = require('node-persist');
 storage.initSync();
 
 var argv = require('yargs')
-	.command('create', 'Create a new account', function (yargs) {
+	.command('create', 'Creates an account', function (yargs) {
 		yargs.options({
 			name: {
 				demand: true,
@@ -33,7 +33,7 @@ var argv = require('yargs')
 			}
 		}).help('help');
 	})
-	.command('get', 'Get an existing account', function (yargs) {
+	.command('get', 'Gets an account', function (yargs) {
 		yargs.options({
 			name: {
 				demand: true,
@@ -53,41 +53,19 @@ var argv = require('yargs')
 	.argv;
 var command = argv._[0];
 
-// create
-//     --name
-//     --username
-//     --password
-
-// get
-//     --name
-
-// account.name Facebook
-// account.username User12!
-// account.password Password123!
-
 function getAccounts (masterPassword) {
-	// use getItemSync to fetch accounts
 	var encryptedAccount = storage.getItemSync('accounts');
 	var accounts = [];
-
-	// decrypt
 	if (typeof encryptedAccount !== 'undefined') {
 		var bytes = crypto.AES.decrypt(encryptedAccount, masterPassword);
 		accounts = JSON.parse(bytes.toString(crypto.enc.Utf8));
 	}
-
-	// return accounts array
 	return accounts;
 }
 
 function saveAccounts (accounts, masterPassword) {
-	// encrypt accounts
 	var encryptedAccounts = crypto.AES.encrypt(JSON.stringify(accounts), masterPassword);
-	
-	// setItemSync
 	storage.setItemSync('accounts', encryptedAccounts.toString());
-	
-	// return accounts
 	return accounts;
 }
 
@@ -102,7 +80,7 @@ function createAccount (account, masterPassword) {
 }
 
 function getAccount (accountName, masterPassword) {
-	var accounts = getAccounts(masterPassword)
+	var accounts = getAccounts(masterPassword);
 	var matchedAccount;
 
 	accounts.forEach(function (account) {
@@ -124,7 +102,6 @@ if (command === 'create') {
 	console.log(createdAccount);
 } else if (command === 'get') {
 	var fetchedAccount = getAccount(argv.name, argv.masterPassword);
-
 	if (typeof fetchedAccount === 'undefined') {
 		console.log('Account not found');
 	} else {
@@ -132,22 +109,3 @@ if (command === 'create') {
 		console.log(fetchedAccount);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
