@@ -1,15 +1,14 @@
 {
-  "name": "async",
+  "name": "web-server",
   "version": "1.0.0",
-  "main": "hello-async.js",
+  "description": "Basic express web server",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "request": "^2.72.0"
-  },
-  "devDependencies": {},
-  "description": ""
+    "express": "^4.13.4"
+  }
 }
